@@ -7,7 +7,7 @@ class Grid {
         this.init()
     }
     init() {
-        var floor = new THREE.PlaneGeometry(this.size, this.size, 25, 25);
+        var floor = new THREE.PlaneGeometry(this.size, this.size, this.size / 100, this.size / 100);
         var materialBlack = new THREE.MeshBasicMaterial({
             side: THREE.DoubleSide,
             color: this.color,

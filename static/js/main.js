@@ -16,9 +16,9 @@ $(document).ready(() => {
         45,    // kąt patrzenia kamery (FOV - field of view)
         $(window).width() / $(window).height(),   // proporcje widoku, powinny odpowiadać proporjom naszego ekranu przeglądarki
         0.1,    // minimalna renderowana odległość
-        10000    // maxymalna renderowana odległość od kamery 
+        50000    // maxymalna renderowana odległość od kamery 
     );
-    camera.position.set(300, 100, 300)
+    camera.position.set(600, 400, 600)
     camera.lookAt(scene.position)
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -31,7 +31,7 @@ $(document).ready(() => {
     $("#root").append(renderer.domElement);
     // #endregion initial
 
-    let grid = new Grid(2500)
+    let grid = new Grid(10000)
     grid.addTo(scene)
 
     var orbitControl = new THREE.OrbitControls(camera, renderer.domElement);
@@ -44,12 +44,10 @@ $(document).ready(() => {
 
     var cannon = new Cannon()
     cannon.addTo(scene)
-    cannon.position.y = 50
 
-    var ball = new Ball()
-    ball.addTo(scene)
+    cannon.position.x = 50
 
-    ball.fly(90)
+    cannon.load()
 
 
     // #region listeneres
@@ -59,11 +57,13 @@ $(document).ready(() => {
     $('#controls-barrel-rotation').on('input', function () {
         cannon.rotateBarrel($(this).val())
     })
+    $('#controls-fire').click(function () {
+        cannon.fire()
+    })
     // #endregion listeneres
 
 
     function render() {
-        if (ball) ball.keepFlying()
 
         renderer.render(scene, camera);
         requestAnimationFrame(render);

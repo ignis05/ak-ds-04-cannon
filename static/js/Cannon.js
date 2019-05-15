@@ -52,13 +52,12 @@ class Cannon {
     get position() {
         return this.group.position
     }
+    get rotation() {
+        return this.group.rotation
+    }
     async fire() {
         if (this.ball) {
-            this.ball.fly(π / 2 - this.barrel.rotation.z).then(() => {
-                setTimeout(() => {
-                    this.load()
-                }, 1000)
-            })
+            this.ball.fly(π / 2 - this.barrel.rotation.z)
             this.ball = false
         }
     }
@@ -79,6 +78,8 @@ class Cannon {
             let z = this.position.z + r * Math.sin(zenit) * Math.sin(azymut)
             let y = this.position.y + r * Math.cos(zenit)
             this.ball.position.set(x, y, z)
+
+            this.ball.rotation.y = this.rotation.y - π / 2
         }
     }
 }

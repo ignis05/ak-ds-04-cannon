@@ -40,7 +40,7 @@ $(document).ready(() => {
     });
 
     var axesHelper = new THREE.AxesHelper(5000);
-    scene.add(axesHelper);
+    // scene.add(axesHelper);
 
     var cannon = new Cannon()
     cannon.addTo(scene)
@@ -58,8 +58,26 @@ $(document).ready(() => {
         cannon.rotateBarrel($(this).val())
     })
     $('#controls-fire').click(function () {
-        cannon.fire()
+        if (cannon.ball) {
+            cannon.fire()
+            $(this).html('Reload')
+        }
+        else {
+            cannon.load()
+            $(this).html('FIRE!')
+        }
     })
+    function updateBallDespawnSettings() {
+        let on = $('#controls-ball-despawn').is(':checked')
+        if (!on) {
+            Ball.DESPAWNTIME = false
+            return
+        }
+        let time = ~~($('#controls-ball-despawn-time').val()) // '~~' returns 0 if isNaN()
+        Ball.DESPAWNTIME = time
+    }
+    $('#controls-ball-despawn').click(updateBallDespawnSettings)
+    $('#controls-ball-despawn-time').on('input', updateBallDespawnSettings)
     // #endregion listeneres
 
 

@@ -44,9 +44,15 @@
 
 <body>
     <div id='controls'>
+        <label>Cannon rotation</label>
         <input type='range' id='controls-cannon-rotation' max='360' min='0' step='1' value='0'>
+        <label>Barrel angle</label>
         <input type='range' id='controls-barrel-rotation' max='90' min='0' step='1' value='0'>
         <button id='controls-fire'>FIRE!</button>
+        <br><br><br>
+        <label>Canonball despawn</label>
+        <input type='checkbox' checked=true id='controls-ball-despawn'>
+        <input type='number' min='0' max='1000000' step='500' value='3000' id='controls-ball-despawn-time'>
     </div>
     <div id='root'>
 </body>

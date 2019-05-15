@@ -1,4 +1,5 @@
 class Ball {
+    static DESPAWNTIME = 3000
     constructor() {
         var geometry = new THREE.SphereGeometry(22, 8, 8);
         var material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
@@ -8,12 +9,17 @@ class Ball {
         this.mesh.add(new THREE.Mesh(geometry, materialWireframe))
 
         this.flying = false
+
+        this.mesh.add(new THREE.AxesHelper(100))
     }
     addTo(parent) {
         parent.add(this.mesh)
     }
     get position() {
         return this.mesh.position
+    }
+    get rotation() {
+        return this.mesh.rotation
     }
     fly(angle, gravity, velocity) {
         return new Promise(res => {
@@ -44,9 +50,11 @@ class Ball {
                 }
                 else {
                     res(this.position)
-                    setTimeout(() => {
-                        this.mesh.parent.remove(this.mesh)
-                    }, 3000)
+                    if (Ball.DESPAWNTIME !== false) { // only despawn inf despawntime is set
+                        setTimeout(() => {
+                            this.mesh.parent.remove(this.mesh)
+                        }, Ball.DESPAWNTIME)
+                    }
                 }
             }
             keepFlying()

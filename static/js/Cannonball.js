@@ -1,6 +1,7 @@
 class Cannonball {
-    static DESPAWNTIME = 3000
-    static GRAVITY = 9.81
+    static DESPAWNTIME = false
+    static TIME = 0.5
+    static SPAWNED_CANNONBALLS = []
     constructor() {
         var geometry = new THREE.SphereGeometry(22, 8, 8);
         var material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
@@ -22,20 +23,14 @@ class Cannonball {
     get rotation() {
         return this.mesh.rotation
     }
-    fly(angle, direction, velocity) {
+    fly(angle, direction, velocity, weight) {
         return new Promise(res => {
-
-            console.log('starting flight');
-            /* - angle - kąt nachylenia lufy w stosunku do podłoża
-            - t - zmienna określająca upływ czasu
-            - v - prędkość początkowa
-            */
-            this.gravity = Cannonball.GRAVITY
+            this.gravity = weight ? weight : 9.81
             this.velocity = velocity ? velocity : 100
             this.angle = angle
             this.direction = direction
-            this.flying = 1
-            console.log(this);
+            this.flying = 0.01
+            // console.log(this);
 
             this.startPos = this.position.clone()
 
@@ -44,7 +39,7 @@ class Cannonball {
                     this.position.x = this.startPos.x + this.velocity * this.flying * Math.cos(this.angle) * Math.sin(this.direction)
                     this.position.y = this.startPos.y + this.velocity * this.flying * Math.sin(this.angle) - ((this.gravity * this.flying * this.flying) / 2)
                     this.position.z = this.startPos.z + this.velocity * this.flying * Math.cos(this.angle) * Math.cos(this.direction)
-                    this.flying += 0.1
+                    this.flying += Cannonball.TIME
                     if (this.position.y <= 22) {
                         this.flying = false
                     }
@@ -56,6 +51,9 @@ class Cannonball {
                         setTimeout(() => {
                             this.mesh.parent.remove(this.mesh)
                         }, Cannonball.DESPAWNTIME)
+                    }
+                    else { // if dispawn is disabled
+                        Cannonball.SPAWNED_CANNONBALLS.push(this)
                     }
                 }
             }

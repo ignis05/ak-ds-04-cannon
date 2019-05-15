@@ -53,26 +53,71 @@ $(document).ready(() => {
 
 
     // #region listeneres
+    // rotation
     $('#controls-cannon-rotation').on('input', function () {
-        let val = $(this).val() <= 360 ? $(this).val() : 360
+        let val = parseInt($(this).val())
+        if (val < 0) val = 0
+        if (val > 360) val = 360
         cannon.rotateCannon(val)
         $('#controls-cannon-rotation-input').val(val)
     })
     $('#controls-cannon-rotation-input').on('input', function () {
-        let val = $(this).val() <= 360 ? $(this).val() : 360
+        let val = parseInt($(this).val())
+        if (val < 0) val = 0
+        if (val > 360) val = 360
         cannon.rotateCannon(90 - val)
         $('#controls-cannon-rotation').val(val)
     })
+
+    // angle
     $('#controls-barrel-rotation').on('input', function () {
-        let val = $(this).val() <= 90 ? $(this).val() : 90
+        let val = parseInt($(this).val())
+        if (val < 0) val = 0
+        if (val > 90) val = 90
         cannon.rotateBarrel(90 - val)
         $('#controls-barrel-rotation-input').val(val)
     })
     $('#controls-barrel-rotation-input').on('input', function () {
-        let val = $(this).val() <= 90 ? $(this).val() : 90
+        let val = parseInt($(this).val())
+        if (val < 0) val = 0
+        if (val > 90) val = 90
         cannon.rotateBarrel(val)
         $('#controls-barrel-rotation').val(val)
     })
+
+    // power
+    $('#controls-cannon-power').on('input', function () {
+        let val = parseInt($(this).val())
+        if (val < 0) val = 0
+        if (val > 1000) val = 1000
+        cannon.power = val
+        $('#controls-cannon-power-input').val(val)
+    })
+    $('#controls-cannon-power-input').on('input', function () {
+        let val = parseInt($(this).val())
+        if (val < 0) val = 0
+        if (val > 1000) val = 1000
+        cannon.power = val
+        $('#controls-cannon-power').val(val)
+    })
+
+    //gravity
+    $('#controls-gravity').on('input', function () {
+        let val = parseFloat($(this).val())
+        if (val < 0) val = 0
+        if (val > 100) val = 100
+        cannon.cannonball_weight = val
+        $('#controls-gravity-input').val(val)
+    })
+    $('#controls-gravity-input').on('input', function () {
+        let val = parseFloat($(this).val())
+        if (val < 0) val = 0
+        if (val > 100) val = 100
+        cannon.cannonball_weight = val
+        $('#controls-gravity').val(val)
+    })
+
+    //fire
     $('#controls-fire').click(function () {
         if (cannon.ball) {
             cannon.fire()
@@ -93,6 +138,14 @@ $(document).ready(() => {
         }
         let time = ~~($('#controls-ball-despawn-time').val()) // '~~' returns 0 if isNaN()
         Cannonball.DESPAWNTIME = time
+
+        console.log(Cannonball.SPAWNED_CANNONBALLS);
+        for (let ball of Cannonball.SPAWNED_CANNONBALLS) {
+            console.log(ball);
+            ball.mesh.parent.remove(ball.mesh)
+        }
+        Cannonball.SPAWNED_CANNONBALLS = []
+
     }
     $('#controls-ball-despawn').click(updateBallDespawnSettings)
     $('#controls-ball-despawn-time').on('input', updateBallDespawnSettings)
@@ -110,11 +163,20 @@ $(document).ready(() => {
             cannon.autoreload = false
         }
     })
-    $('#controls-gravity').on('input', function () {
-        let val = parseInt($(this).val())
+
+    $('#controls-time').on('input', function () {
+        let val = parseFloat($(this).val())
         if (val < 0) val = 0
         if (val > 100) val = 100
-        Cannonball.GRAVITY = val
+        Cannonball.TIME = val
+        $('#controls-time-input').val(val)
+    })
+    $('#controls-time-input').on('input', function () {
+        let val = parseFloat($(this).val())
+        if (val < 0) val = 0
+        if (val > 100) val = 100
+        Cannonball.TIME = val / 2
+        $('#controls-time').val(val)
     })
     // #endregion listeneres
 

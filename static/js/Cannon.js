@@ -1,5 +1,7 @@
 class Cannon {
-    constructor(autoreload) {
+    constructor(power, cannonball_weight, autoreload) {
+        this.power = power ? power : 100
+        this.cannonball_weight = cannonball_weight ? cannonball_weight : 9.81
         this.autoreload = autoreload ? true : false
 
         this.group = new THREE.Group // Object3D
@@ -58,7 +60,7 @@ class Cannon {
     }
     fire() {
         if (this.ball) {
-            this.ball.fly(π / 2 - this.barrel.rotation.z, this.group.rotation.y - π / 2).then(() => {
+            this.ball.fly(π / 2 - this.barrel.rotation.z, this.group.rotation.y - π / 2, this.power, this.cannonball_weight).then(() => {
                 if (this.autoreload) this.load()
             })
             this.ball = false

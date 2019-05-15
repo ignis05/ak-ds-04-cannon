@@ -1,5 +1,6 @@
 class Cannonball {
     static DESPAWNTIME = 3000
+    static GRAVITY = 9.81
     constructor() {
         var geometry = new THREE.SphereGeometry(22, 8, 8);
         var material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
@@ -21,7 +22,7 @@ class Cannonball {
     get rotation() {
         return this.mesh.rotation
     }
-    fly(angle, direction, gravity, velocity) {
+    fly(angle, direction, velocity) {
         return new Promise(res => {
 
             console.log('starting flight');
@@ -29,7 +30,7 @@ class Cannonball {
             - t - zmienna określająca upływ czasu
             - v - prędkość początkowa
             */
-            this.gravity = gravity ? gravity : 9.81
+            this.gravity = Cannonball.GRAVITY
             this.velocity = velocity ? velocity : 100
             this.angle = angle
             this.direction = direction

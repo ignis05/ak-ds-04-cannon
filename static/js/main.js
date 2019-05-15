@@ -54,33 +54,35 @@ $(document).ready(() => {
 
     // #region listeneres
     $('#controls-cannon-rotation').on('input', function () {
-        let val = $(this).val()
+        let val = $(this).val() <= 360 ? $(this).val() : 360
         cannon.rotateCannon(val)
         $('#controls-cannon-rotation-input').val(val)
     })
     $('#controls-cannon-rotation-input').on('input', function () {
-        let val = $(this).val()
-        cannon.rotateCannon(val)
+        let val = $(this).val() <= 360 ? $(this).val() : 360
+        cannon.rotateCannon(90 - val)
         $('#controls-cannon-rotation').val(val)
     })
     $('#controls-barrel-rotation').on('input', function () {
-        let val = $(this).val()
-        cannon.rotateBarrel(val)
+        let val = $(this).val() <= 90 ? $(this).val() : 90
+        cannon.rotateBarrel(90 - val)
         $('#controls-barrel-rotation-input').val(val)
     })
     $('#controls-barrel-rotation-input').on('input', function () {
-        let val = $(this).val()
+        let val = $(this).val() <= 90 ? $(this).val() : 90
         cannon.rotateBarrel(val)
         $('#controls-barrel-rotation').val(val)
     })
     $('#controls-fire').click(function () {
         if (cannon.ball) {
             cannon.fire()
-            $(this).html('Reload')
+            if (!cannon.autoreload) $(this).html('Reload')
         }
         else {
-            cannon.load()
-            $(this).html('FIRE!')
+            if (!cannon.autoreload) {
+                cannon.load()
+                $(this).html('FIRE!')
+            }
         }
     })
     function updateBallDespawnSettings() {
@@ -94,6 +96,26 @@ $(document).ready(() => {
     }
     $('#controls-ball-despawn').click(updateBallDespawnSettings)
     $('#controls-ball-despawn-time').on('input', updateBallDespawnSettings)
+
+    $('#controls-cannon-autoreload').change(function () {
+        let on = $(this).is(':checked')
+        if (on) {
+            if (!cannon.ball) {
+                $('#controls-fire').html('FIRE!')
+                cannon.load() // load if cannon is empty
+            }
+            cannon.autoreload = true
+        }
+        else {
+            cannon.autoreload = false
+        }
+    })
+    $('#controls-gravity').on('input', function () {
+        let val = parseInt($(this).val())
+        if (val < 0) val = 0
+        if (val > 100) val = 100
+        Cannonball.GRAVITY = val
+    })
     // #endregion listeneres
 
 

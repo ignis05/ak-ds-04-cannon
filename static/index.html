@@ -34,6 +34,7 @@
             align-items: center;
             justify-content: center;
             background: #aaaaaa;
+            padding: 5px;
         }
 
         #game {
@@ -62,9 +63,15 @@
         <br>
         <button id='controls-fire'>FIRE!</button>
         <br><br><br>
-        <label>Canonball despawn</label>
-        <input type='checkbox' checked=true id='controls-ball-despawn'>
+        <label>Cannonball despawn</label>
+        <input type='checkbox' checked id='controls-ball-despawn'>
         <input type='number' min='0' max='1000000' step='500' value='3000' id='controls-ball-despawn-time'>
+        <br>
+        <label>Cannon auto reload</label>
+        <input type='checkbox' id='controls-cannon-autoreload'>
+        <br>
+        <label>World gravity</label>
+        <input type='number' id='controls-gravity' min='0' max='100' step='.01' value='9.81'>
     </div>
     <div id='root'>
 </body>

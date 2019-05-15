@@ -1,5 +1,7 @@
 class Cannon {
-    constructor() {
+    constructor(autoreload) {
+        this.autoreload = autoreload ? true : false
+
         this.group = new THREE.Group // Object3D
         this.wheels = new THREE.Group
         this.group.add(this.wheels)
@@ -56,16 +58,19 @@ class Cannon {
     }
     fire() {
         if (this.ball) {
-            this.ball.fly(π / 2 - this.barrel.rotation.z, this.group.rotation.y - π/2 )
+            this.ball.fly(π / 2 - this.barrel.rotation.z, this.group.rotation.y - π / 2).then(() => {
+                if (this.autoreload) this.load()
+            })
             this.ball = false
         }
     }
     load() {
-        var ball = new Cannonball()
-        this.ball = ball
-        ball.addTo(this.group.parent)
-
-        this.setBallPosition()
+        if (!this.ball) {
+            var ball = new Cannonball()
+            this.ball = ball
+            ball.addTo(this.group.parent)
+            this.setBallPosition()
+        }
     }
     setBallPosition() {
         if (this.ball) {

@@ -60,5 +60,32 @@ class Cannonball {
             keepFlying()
         })
     }
+    aim(angle, direction, velocity, weight) { //calcualtes where ball will land
+        return new Promise(async res => { // async so while() wont freeze code
+            let startPos = this.position.clone()
+            var i = 0.01
+            var y
+            // var goBackward = false
+            // do {
+            //     if (goBackward) i = i - 0.1
+            //     else {
+            //         if (y > 0) i = i + 2 // if above ground go forward fast
+            //         if (y < 0) goBackward = true// if below ground go backward slow
+            //     }
+            //     y = startPos.y + velocity * i * Math.sin(angle) - ((weight * i * i) / 2)
+            //     // console.log(y);
+            // } while (y > 30 || y < 20)
+
+            do {
+                i += Cannonball.TIME > 0 ? Cannonball.TIME : 0.05
+                y = startPos.y + velocity * i * Math.sin(angle) - ((weight * i * i) / 2)
+            } while (y > 22)
+
+            var x = startPos.x + velocity * i * Math.cos(angle) * Math.sin(direction)
+            var z = startPos.z + velocity * i * Math.cos(angle) * Math.cos(direction)
+
+            res({ x: x, y: y, z: z })
+        })
+    }
 
 }

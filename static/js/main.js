@@ -60,6 +60,7 @@ $(document).ready(() => {
         if (val > 360) val = 360
         cannon.rotateCannon(val)
         $('#controls-cannon-rotation-input').val(val)
+        cannon.displayAimAssist()
     })
     $('#controls-cannon-rotation-input').on('input', function () {
         let val = parseInt($(this).val())
@@ -67,6 +68,7 @@ $(document).ready(() => {
         if (val > 360) val = 360
         cannon.rotateCannon(90 - val)
         $('#controls-cannon-rotation').val(val)
+        cannon.displayAimAssist()
     })
 
     // angle
@@ -76,6 +78,7 @@ $(document).ready(() => {
         if (val > 90) val = 90
         cannon.rotateBarrel(90 - val)
         $('#controls-barrel-rotation-input').val(val)
+        cannon.displayAimAssist()
     })
     $('#controls-barrel-rotation-input').on('input', function () {
         let val = parseInt($(this).val())
@@ -83,6 +86,7 @@ $(document).ready(() => {
         if (val > 90) val = 90
         cannon.rotateBarrel(val)
         $('#controls-barrel-rotation').val(val)
+        cannon.displayAimAssist()
     })
 
     // power
@@ -92,6 +96,7 @@ $(document).ready(() => {
         if (val > 1000) val = 1000
         cannon.power = val
         $('#controls-cannon-power-input').val(val)
+        cannon.displayAimAssist()
     })
     $('#controls-cannon-power-input').on('input', function () {
         let val = parseInt($(this).val())
@@ -99,6 +104,7 @@ $(document).ready(() => {
         if (val > 1000) val = 1000
         cannon.power = val
         $('#controls-cannon-power').val(val)
+        cannon.displayAimAssist()
     })
 
     //gravity
@@ -108,6 +114,7 @@ $(document).ready(() => {
         if (val > 100) val = 100
         cannon.cannonball_weight = val
         $('#controls-gravity-input').val(val)
+        cannon.displayAimAssist()
     })
     $('#controls-gravity-input').on('input', function () {
         let val = parseFloat($(this).val())
@@ -115,6 +122,7 @@ $(document).ready(() => {
         if (val > 100) val = 100
         cannon.cannonball_weight = val
         $('#controls-gravity').val(val)
+        cannon.displayAimAssist()
     })
 
     //fire
@@ -130,6 +138,15 @@ $(document).ready(() => {
             }
         }
     })
+
+    //aim
+    $('#controls-aim').change(function () {
+        let on = $(this).is(':checked')
+        cannon.aimAssistEnabled = on
+        cannon.displayAimAssist()
+    })
+
+    //despawn
     function updateBallDespawnSettings() {
         let on = $('#controls-ball-despawn').is(':checked')
         if (!on) {
@@ -170,6 +187,7 @@ $(document).ready(() => {
         if (val > 100) val = 100
         Cannonball.TIME = val
         $('#controls-time-input').val(val)
+        cannon.displayAimAssist()
     })
     $('#controls-time-input').on('input', function () {
         let val = parseFloat($(this).val())
@@ -177,9 +195,9 @@ $(document).ready(() => {
         if (val > 100) val = 100
         Cannonball.TIME = val / 2
         $('#controls-time').val(val)
+        cannon.displayAimAssist()
     })
     // #endregion listeneres
-
 
     function render() {
 

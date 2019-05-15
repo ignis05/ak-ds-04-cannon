@@ -40,6 +40,9 @@ class Cannon {
         this.group.position.y = 50
 
         this.ball = false
+
+        this.aimAssistEnabled = false
+        this.aimAssist = null
     }
     addTo(parent) {
         parent.add(this.group)
@@ -72,6 +75,9 @@ class Cannon {
             this.ball = ball
             ball.addTo(this.group.parent)
             this.setBallPosition()
+
+
+            this.displayAimAssist()
         }
     }
     setBallPosition() {
@@ -86,6 +92,33 @@ class Cannon {
             this.ball.position.set(x, y, z)
 
             this.ball.rotation.y = this.rotation.y - π / 2
+        }
+    }
+    aim() { // calcualtes where shot will land with current parameters
+        if (this.ball) {
+            return this.ball.aim(π / 2 - this.barrel.rotation.z, this.group.rotation.y - π / 2, this.power, this.cannonball_weight)
+        }
+    }
+    displayAimAssist() {
+        if (this.ball) {
+            if (this.aimAssistEnabled) {
+                console.log('here');
+                if (!this.aimAssist) {
+                    this.aimAssist = new THREE.Mesh(new THREE.SphereGeometry(22, 8, 8), new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true }))
+                    this.group.parent.add(this.aimAssist)
+                }
+                this.aim().then(cords => {
+                    console.log(cords);
+                    let pos = new THREE.Vector3(cords.x, cords.y, cords.z)
+                    this.aimAssist.position.copy(pos)
+                })
+            }
+            else {
+                if (this.aimAssist) {
+                    this.aimAssist.parent.remove(this.aimAssist)
+                    this.aimAssist = null
+                }
+            }
         }
     }
 }

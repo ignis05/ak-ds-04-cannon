@@ -10,7 +10,7 @@ class Ball {
 
         this.flying = false
 
-        this.mesh.add(new THREE.AxesHelper(100))
+        // this.mesh.add(new THREE.AxesHelper(100))
     }
     addTo(parent) {
         parent.add(this.mesh)
@@ -21,7 +21,7 @@ class Ball {
     get rotation() {
         return this.mesh.rotation
     }
-    fly(angle, gravity, velocity) {
+    fly(angle, direction, gravity, velocity) {
         return new Promise(res => {
 
             console.log('starting flight');
@@ -32,6 +32,7 @@ class Ball {
             this.gravity = gravity ? gravity : 9.81
             this.velocity = velocity ? velocity : 100
             this.angle = angle
+            this.direction = direction
             this.flying = 1
             console.log(this);
 
@@ -39,9 +40,9 @@ class Ball {
 
             var keepFlying = () => {
                 if (this.flying !== false) {
-                    this.position.x = this.startPos.x
+                    this.position.x = this.startPos.x + this.velocity * this.flying * Math.cos(this.angle) * Math.sin(this.direction)
                     this.position.y = this.startPos.y + this.velocity * this.flying * Math.sin(this.angle) - ((this.gravity * this.flying * this.flying) / 2)
-                    this.position.z = this.startPos.z + this.velocity * this.flying * Math.cos(this.angle)
+                    this.position.z = this.startPos.z + this.velocity * this.flying * Math.cos(this.angle) * Math.cos(this.direction)
                     this.flying += 0.1
                     if (this.position.y <= 22) {
                         this.flying = false

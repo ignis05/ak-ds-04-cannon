@@ -55,9 +55,9 @@ class Cannon {
     get rotation() {
         return this.group.rotation
     }
-    async fire() {
+    fire() {
         if (this.ball) {
-            this.ball.fly(π / 2 - this.barrel.rotation.z)
+            this.ball.fly(π / 2 - this.barrel.rotation.z, this.group.rotation.y - π/2 )
             this.ball = false
         }
     }

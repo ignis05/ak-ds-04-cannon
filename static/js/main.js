@@ -1,6 +1,7 @@
 var scene;
 var renderer;
-var π = Math.PI
+var π = Math.PI //xd
+
 $(document).ready(() => {
 
     // #region initial
@@ -40,14 +41,13 @@ $(document).ready(() => {
     });
 
     var axesHelper = new THREE.AxesHelper(5000);
-    // scene.add(axesHelper);
+    scene.add(axesHelper);
 
     var cannon = new Cannon()
     cannon.addTo(scene)
-
-    cannon.position.x = 50
-
     cannon.load()
+
+
 
 
     // #region listeneres

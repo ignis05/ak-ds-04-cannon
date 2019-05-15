@@ -46,6 +46,11 @@ $(document).ready(() => {
     cannon.addTo(scene)
     cannon.position.y = 50
 
+    var ball = new Ball()
+    ball.addTo(scene)
+
+    ball.fly(90)
+
 
     // #region listeneres
     $('#controls-cannon-rotation').on('input', function () {
@@ -58,6 +63,7 @@ $(document).ready(() => {
 
 
     function render() {
+        if (ball) ball.keepFlying()
 
         renderer.render(scene, camera);
         requestAnimationFrame(render);

@@ -1,20 +1,22 @@
 class Cannon {
     constructor() {
         this.group = new THREE.Group // Object3D
+        this.wheels = new THREE.Group
+        this.group.add(this.wheels)
+
 
         var barrelGeometry = new THREE.CylinderGeometry(25, 25, 200, 8, 24);
         var barrelMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
         this.barrel = new THREE.Mesh(barrelGeometry, barrelMaterial);
-
         this.group.add(this.barrel)
+
+
 
         let wireframeBarrelMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
         this.barrel.add(new THREE.Mesh(barrelGeometry, wireframeBarrelMaterial))
 
         barrelGeometry.translate(0, 70, 0)
 
-        this.wheels = new THREE.Group
-        this.group.add(this.wheels)
 
         var wheelGeometry = new THREE.CylinderGeometry(50, 50, 20, 16);
         var wheelMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
@@ -30,7 +32,6 @@ class Cannon {
 
         this.wheels.add(wheel1)
         this.wheels.add(wheel2)
-
     }
     addTo(parent) {
         parent.add(this.group)

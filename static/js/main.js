@@ -199,6 +199,87 @@ $(document).ready(() => {
     })
     // #endregion listeneres
 
+    // #region keyboard listeners
+    $(window).on('keydown', () => {
+        // console.log(event.code);
+        if (event.code == 'KeyA') {
+            let val = parseInt($('#controls-cannon-rotation').val()) + 1
+            if (val < 0) val = 0
+            if (val > 360) val = 360
+            cannon.rotateCannon(val)
+            $('#controls-cannon-rotation-input').val(val)
+            $('#controls-cannon-rotation').val(val)
+            cannon.displayAimAssist()
+        }
+        if (event.code == 'KeyD') {
+            let val = parseInt($('#controls-cannon-rotation').val()) - 1
+            if (val < 0) val = 0
+            if (val > 360) val = 360
+            cannon.rotateCannon(val)
+            $('#controls-cannon-rotation-input').val(val)
+            $('#controls-cannon-rotation').val(val)
+            cannon.displayAimAssist()
+        }
+        if (event.code == 'KeyW') {
+            let val = parseInt($(`#controls-barrel-rotation`).val()) + 1
+            if (val < 0) val = 0
+            if (val > 90) val = 90
+            cannon.rotateBarrel(90 - val)
+            $('#controls-barrel-rotation-input').val(val)
+            $('#controls-barrel-rotation').val(val)
+            cannon.displayAimAssist()
+        }
+        if (event.code == 'KeyS') {
+            let val = parseInt($(`#controls-barrel-rotation`).val()) - 1
+            if (val < 0) val = 0
+            if (val > 90) val = 90
+            cannon.rotateBarrel(90 - val)
+            $('#controls-barrel-rotation-input').val(val)
+            $('#controls-barrel-rotation').val(val)
+            cannon.displayAimAssist()
+        }
+        if (event.code == 'KeyQ') {
+            let val = parseInt($('#controls-cannon-power').val()) + 1
+            if (val < 0) val = 0
+            if (val > 1000) val = 1000
+            cannon.power = val
+            $('#controls-cannon-power-input').val(val)
+            $('#controls-cannon-power').val(val)
+            cannon.displayAimAssist()
+        }
+        if (event.code == 'KeyE') {
+            let val = parseInt($('#controls-cannon-power').val()) - 1
+            if (val < 0) val = 0
+            if (val > 1000) val = 1000
+            cannon.power = val
+            $('#controls-cannon-power-input').val(val)
+            $('#controls-cannon-power').val(val)
+            cannon.displayAimAssist()
+        }
+        if (event.code == 'KeyZ') {
+            let val = parseFloat($('#controls-gravity').val()) + 0.5
+            if (val < 0) val = 0
+            if (val > 100) val = 100
+            cannon.cannonball_weight = val
+            $('#controls-gravity-input').val(val)
+            $('#controls-gravity').val(val)
+            cannon.displayAimAssist()
+        }
+        if (event.code == 'KeyC') {
+            let val = parseFloat($('#controls-gravity').val()) - 0.5
+            if (val < 0) val = 0
+            if (val > 100) val = 100
+            cannon.cannonball_weight = val
+            $('#controls-gravity-input').val(val)
+            $('#controls-gravity').val(val)
+            cannon.displayAimAssist()
+        }
+        if (event.code == 'Space') {
+            $('#controls-fire').click()
+        }
+    })
+    // #endregion keyboard listeners
+
     function render() {
 
         renderer.render(scene, camera);

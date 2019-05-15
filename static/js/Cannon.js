@@ -47,7 +47,6 @@ class Cannon {
     rotateBarrel(deg) {
         this.barrel.rotation.z = deg * π / 180
         this.setBallPosition()
-        console.log('rotation:' + this.barrel.rotation.z);
     }
     get position() {
         return this.group.position
@@ -62,7 +61,7 @@ class Cannon {
         }
     }
     load() {
-        var ball = new Ball()
+        var ball = new Cannonball()
         this.ball = ball
         ball.addTo(this.group.parent)
 

@@ -45,17 +45,33 @@ $(document).ready(() => {
 
     var cannon = new Cannon()
     cannon.addTo(scene)
+    cannon.rotateBarrel(45)
     cannon.load()
+
 
 
 
 
     // #region listeneres
     $('#controls-cannon-rotation').on('input', function () {
-        cannon.rotateCannon($(this).val())
+        let val = $(this).val()
+        cannon.rotateCannon(val)
+        $('#controls-cannon-rotation-input').val(val)
+    })
+    $('#controls-cannon-rotation-input').on('input', function () {
+        let val = $(this).val()
+        cannon.rotateCannon(val)
+        $('#controls-cannon-rotation').val(val)
     })
     $('#controls-barrel-rotation').on('input', function () {
-        cannon.rotateBarrel($(this).val())
+        let val = $(this).val()
+        cannon.rotateBarrel(val)
+        $('#controls-barrel-rotation-input').val(val)
+    })
+    $('#controls-barrel-rotation-input').on('input', function () {
+        let val = $(this).val()
+        cannon.rotateBarrel(val)
+        $('#controls-barrel-rotation').val(val)
     })
     $('#controls-fire').click(function () {
         if (cannon.ball) {
@@ -70,11 +86,11 @@ $(document).ready(() => {
     function updateBallDespawnSettings() {
         let on = $('#controls-ball-despawn').is(':checked')
         if (!on) {
-            Ball.DESPAWNTIME = false
+            Cannonball.DESPAWNTIME = false
             return
         }
         let time = ~~($('#controls-ball-despawn-time').val()) // '~~' returns 0 if isNaN()
-        Ball.DESPAWNTIME = time
+        Cannonball.DESPAWNTIME = time
     }
     $('#controls-ball-despawn').click(updateBallDespawnSettings)
     $('#controls-ball-despawn-time').on('input', updateBallDespawnSettings)

@@ -1,4 +1,4 @@
-class Ball {
+class Cannonball {
     static DESPAWNTIME = 3000
     constructor() {
         var geometry = new THREE.SphereGeometry(22, 8, 8);
@@ -51,10 +51,10 @@ class Ball {
                 }
                 else {
                     res(this.position)
-                    if (Ball.DESPAWNTIME !== false) { // only despawn inf despawntime is set
+                    if (Cannonball.DESPAWNTIME !== false) { // only despawn inf despawntime is set
                         setTimeout(() => {
                             this.mesh.parent.remove(this.mesh)
-                        }, Ball.DESPAWNTIME)
+                        }, Cannonball.DESPAWNTIME)
                     }
                 }
             }

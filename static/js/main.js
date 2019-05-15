@@ -1,5 +1,6 @@
 var scene;
 var renderer;
+var π = Math.PI
 $(document).ready(() => {
 
     // #region initial
@@ -37,6 +38,23 @@ $(document).ready(() => {
     orbitControl.addEventListener('change', function () {
         renderer.render(scene, camera)
     });
+
+    var axesHelper = new THREE.AxesHelper(5000);
+    scene.add(axesHelper);
+
+    var cannon = new Cannon()
+    cannon.addTo(scene)
+    cannon.position.y = 50
+
+
+    // #region listeneres
+    $('#controls-cannon-rotation').on('input', function () {
+        cannon.rotateCannon($(this).val())
+    })
+    $('#controls-barrel-rotation').on('input', function () {
+        cannon.rotateBarrel($(this).val())
+    })
+    // #endregion listeneres
 
 
     function render() {

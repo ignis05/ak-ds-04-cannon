@@ -184,7 +184,7 @@ $(document).ready(() => {
     $('#controls-time').on('input', function () {
         let val = parseFloat($(this).val())
         if (val < 0) val = 0
-        if (val > 100) val = 100
+        if (val > 3) val = 3
         Cannonball.TIME = val
         $('#controls-time-input').val(val)
         cannon.displayAimAssist()
@@ -192,7 +192,7 @@ $(document).ready(() => {
     $('#controls-time-input').on('input', function () {
         let val = parseFloat($(this).val())
         if (val < 0) val = 0
-        if (val > 100) val = 100
+        if (val > 3) val = 3
         Cannonball.TIME = val / 2
         $('#controls-time').val(val)
         cannon.displayAimAssist()

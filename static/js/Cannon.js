@@ -34,6 +34,9 @@ class Cannon {
         let wheel2 = wheel1.clone()
         wheel2.position.z = -35
 
+        this.wheel1 = wheel1
+        this.wheel2 = wheel2
+
         this.wheels.add(wheel1)
         this.wheels.add(wheel2)
 
@@ -50,6 +53,9 @@ class Cannon {
     rotateCannon(deg) {
         this.group.rotation.y = deg * π / 180
         this.setBallPosition()
+
+        this.wheel1.rotation.y = - deg * π / 180
+        this.wheel2.rotation.y = deg * π / 180
     }
     rotateBarrel(deg) {
         this.barrel.rotation.z = deg * π / 180

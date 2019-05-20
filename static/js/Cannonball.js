@@ -25,12 +25,12 @@ class Cannonball {
     }
     fly(angle, direction, velocity, weight) {
         return new Promise(res => {
-            this.gravity = weight ? weight : 9.81
+            this.gravity = weight != undefined ? weight : 9.81
             this.velocity = velocity ? velocity : 100
             this.angle = angle
             this.direction = direction
             this.flying = 0.01
-            // console.log(this);
+            console.log(this);
 
             this.startPos = this.position.clone()
 

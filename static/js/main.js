@@ -135,6 +135,16 @@ $(document).ready(() => {
             socket.cannons[socketID].rotateCannon(val)
         }
     })
+    socket.on('cannon_powered', (socketID, val) => {
+        if (socket.cannons[socketID]) {
+            socket.cannons[socketID].power = val
+        }
+    })
+    socket.on('cannon_weighted', (socketID, val) => {
+        if (socket.cannons[socketID]) {
+            socket.cannons[socketID].cannonball_weight = val
+        }
+    })
     socket.on('cannon_fired', socketID => {
         if (socket.cannons[socketID]) {
             socket.cannons[socketID].fire()
@@ -192,6 +202,7 @@ $(document).ready(() => {
         if (val < 0) val = 0
         if (val > 1000) val = 1000
         cannon.power = val
+        socket.emit('power_cannon', val)
         $('#controls-cannon-power-input').val(val)
         cannon.displayAimAssist()
     })
@@ -200,6 +211,7 @@ $(document).ready(() => {
         if (val < 0) val = 0
         if (val > 1000) val = 1000
         cannon.power = val
+        socket.emit('power_cannon', val)
         $('#controls-cannon-power').val(val)
         cannon.displayAimAssist()
     })
@@ -210,6 +222,7 @@ $(document).ready(() => {
         if (val < 0) val = 0
         if (val > 100) val = 100
         cannon.cannonball_weight = val
+        socket.emit('weight_cannon', val)
         $('#controls-gravity-input').val(val)
         cannon.displayAimAssist()
     })
@@ -218,6 +231,7 @@ $(document).ready(() => {
         if (val < 0) val = 0
         if (val > 100) val = 100
         cannon.cannonball_weight = val
+        socket.emit('weight_cannon', val)
         $('#controls-gravity').val(val)
         cannon.displayAimAssist()
     })
@@ -345,6 +359,7 @@ $(document).ready(() => {
             if (val < 0) val = 0
             if (val > 1000) val = 1000
             cannon.power = val
+            socket.emit('power_cannon', val)
             $('#controls-cannon-power-input').val(val)
             $('#controls-cannon-power').val(val)
             cannon.displayAimAssist()
@@ -354,6 +369,7 @@ $(document).ready(() => {
             if (val < 0) val = 0
             if (val > 1000) val = 1000
             cannon.power = val
+            socket.emit('power_cannon', val)
             $('#controls-cannon-power-input').val(val)
             $('#controls-cannon-power').val(val)
             cannon.displayAimAssist()
@@ -363,6 +379,7 @@ $(document).ready(() => {
             if (val < 0) val = 0
             if (val > 100) val = 100
             cannon.cannonball_weight = val
+            socket.emit('weight_cannon', val)
             $('#controls-gravity-input').val(val)
             $('#controls-gravity').val(val)
             cannon.displayAimAssist()
@@ -372,6 +389,7 @@ $(document).ready(() => {
             if (val < 0) val = 0
             if (val > 100) val = 100
             cannon.cannonball_weight = val
+            socket.emit('weight_cannon', val)
             $('#controls-gravity-input').val(val)
             $('#controls-gravity').val(val)
             cannon.displayAimAssist()

@@ -135,6 +135,11 @@ $(document).ready(() => {
             socket.cannons[socketID].rotateCannon(val)
         }
     })
+    socket.on('cannon_fired', socketID => {
+        if (socket.cannons[socketID]) {
+            socket.cannons[socketID].fire()
+        }
+    })
 
 
     // #endregion socket.io
@@ -221,6 +226,7 @@ $(document).ready(() => {
     $('#controls-fire').click(function () {
         if (cannon.ball) {
             cannon.fire()
+            socket.emit('fire_cannon')
             if (!cannon.autoreload) $(this).html('Reload')
         }
         else {

@@ -51,6 +51,11 @@ game.io.on('connect', socket => {
     socket.on('rotate_cannon', val => {
         socket.broadcast.emit('cannon_rotated', socket.id, val); // notify other players
     })
+
+    // cannon fire
+    socket.on('fire_cannon', () => {
+        socket.broadcast.emit('cannon_fired', socket.id); // notify other players
+    })
 })
 
 // automatic routing

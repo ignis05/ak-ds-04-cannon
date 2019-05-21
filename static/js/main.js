@@ -1,8 +1,11 @@
 var scene;
 var renderer;
 var π = Math.PI //xd
+var cannon
 
 $(document).ready(() => {
+
+
 
     // #region initial
     $(window).on("resize", () => {
@@ -43,13 +46,85 @@ $(document).ready(() => {
     var axesHelper = new THREE.AxesHelper(5000);
     scene.add(axesHelper);
 
-    var cannon = new Cannon()
+    cannon = new Cannon(false, false, true)
     cannon.addTo(scene)
     cannon.rotateBarrel(45)
     cannon.load()
 
+    Cannonball.DESPAWNTIME = 1000;
+
+    // trigger socket
+
+    // #region socket.io
+    var socket = io('/game')
+    socket.players = []
+    socket.cannons = {}
+    socket.me = null
+
+    socket.on('client_connected', (socketID, clients) => {
+        console.log(`client ${socketID} connected`);
+        socket.players = clients
+
+        let _cannon = new Cannon(false, false, true)
+        socket.cannons[socketID] = _cannon
+        _cannon.addTo(scene)
+        _cannon.rotateBarrel(45)
+        _cannon.load()
+
+        // set cannon position
+        socket.updateCannons()
+    })
+
+    socket.on('client_disconnected', (socketID, clients) => {
+        console.log(`client ${socketID} disconnected`);
+        socket.players = clients
+        socket.me = clients.indexOf(socket.id)
+        console.log(`im player ${socket.me}`);
+
+        delete socket.cannons[socketID]
+
+        // set cannon position
+        socket.updateCannons()
+    })
+
+    socket.on('player_nr', (nr, players) => {
+        console.log(`im player ${nr}`);
+        socket.me = nr
+        socket.players = players
+        console.log(socket.players);
+
+        for (let s of socket.players) {
+            if (s != socket.id) {
+                let _cannon = new Cannon(false, false, true)
+                socket.cannons[s] = _cannon
+                _cannon.addTo(scene)
+                _cannon.rotateBarrel(45)
+                _cannon.load()
+            }
+        }
+
+        // set cannon position
+        socket.updateCannons()
+    })
+
+    socket.updateCannons = () => {
+        console.log(`updating position ${socket.me}`);
+        cannon.position.z = socket.me * 200
+        cannon.setBallPosition()
+
+        console.log(socket.cannons);
+
+        for (let i in socket.players) {
+            let _cannon = socket.cannons[socket.players[i]]
+            if (_cannon) {
+                _cannon.position.z = i * 200
+                _cannon.setBallPosition()
+            }
+        }
+    }
 
 
+    // #endregion socket.io
 
 
     // #region listeneres

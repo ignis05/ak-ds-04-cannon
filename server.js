@@ -1,117 +1,53 @@
-var http = require("http");
-var fs = require("fs");
-var qs = require("querystring")
+// #region initial
+var http = require("http")
+var express = require("express")
+var fs = require("fs")
+var app = express()
+var server = http.Server(app);
+var io = require("socket.io")(server)
+const PORT = 3000
+var path = require("path")
+var bodyParser = require("body-parser")
+app.use(bodyParser.urlencoded({
+    limit: '50mb',
+    extended: true,
+    parameterLimit: 1000000
+}))
+// #endregion initial
 
-var serverDB = {
-    map: {}
+// #region static routing
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname + `/static/index.html`))
+})
+// #endregion static routing
+
+var game = {
+    io: io.of('/game'),
+    clients: [],
 }
 
-var server = http.createServer(function (req, res) {
-    switch (req.method) {
-        case "GET":
-            console.log(`requested adres: ${decodeURI(req.url)}`)
-            var fileEXTEN = req.url.split(".")[req.url.split(".").length - 1]
-            if (req.url == "/") {
-                fs.readFile(`./static/index.html`, function (error, data) {
-                    if (error) {
-                        res.writeHead(404, { 'Content-Type': 'text/html;charset=utf-8' });
-                        res.write("<h1>błąd 404 - nie ma pliku!<h1>");
-                        res.end();
-                    }
-                    else {
-                        res.writeHead(200, { 'Content-Type': 'text/html;;charset=utf-8' });
-                        res.write(data);
-                        res.end();
-                        console.log("sent index");
-                    }
-                })
-            }
-            else if (req.url == "/game") {
-                fs.readFile(`./static/html/game.html`, function (error, data) {
-                    if (error) {
-                        res.writeHead(404, { 'Content-Type': 'text/html;charset=utf-8' });
-                        res.write("<h1>błąd 404 - nie ma pliku!<h1>");
-                        res.end();
-                    }
-                    else {
-                        res.writeHead(200, { 'Content-Type': 'text/html;;charset=utf-8' });
-                        res.write(data);
-                        res.end();
-                        console.log("sent game");
-                    }
-                })
-            }
-            else {
-                fs.readFile(`.${decodeURI(req.url)}`, function (error, data) {
-                    if (error) {
-                        console.log(`cant find file ${decodeURI(req.url)}`);
-                        res.writeHead(404, { 'Content-Type': 'text/html;charset=utf-8' });
-                        res.write("<h1>Error 404 - file doesnt exist<h1>");
-                        res.end();
-                    }
-                    else {
-                        switch (fileEXTEN) {
-                            case "css":
-                                res.writeHead(200, { 'Content-Type': 'text/css;charset=utf-8' });
-                                break;
-                            case "html":
-                                res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
-                                break;
-                            case "js":
-                                res.writeHead(200, { 'Content-Type': 'application/javascript;charset=utf-8' });
-                                break;
-                            case "png":
-                                res.writeHead(200, { 'Content-Type': 'image/png' });
-                                break;
-                            case "jpg":
-                                res.writeHead(200, { 'Content-Type': 'image/jpg' });
-                                break;
-                            case "mp3":
-                                res.writeHead(200, { "Content-type": "audio/mpeg" });
-                                break
-                            default:
-                                res.writeHead(200, { 'Content-Type': 'text/plain;charset=utf-8' });
-                        }
-                        res.write(data);
-                        res.end();
-                        console.log(`sent file: ${decodeURI(req.url)}`)
-                    }
-                });
-            }
-            break;
-        case "POST":
-            /* if (req.url == "/saveLevel") {
-                saveLevel(req, res)
-            }
-            else if (req.url == "/loadLevel") {
-                loadlevel(req, res)
-            }
-            else {
-                throw "wrong POST url"
-            } */
-            break;
-        default:
-            break;
-    }
+game.io.on('connect', socket => {
+    console.log(`socekt ${socket.id} connected`);
+    game.clients.push(socket.id)
 
+
+    socket.emit('player_nr', game.clients.indexOf(socket.id), game.clients) // notify player his number and give tab
+    socket.broadcast.emit('client_connected', socket.id, game.clients); // notify other players
+
+
+    //disconnect
+    socket.on('disconnect', () => {
+        console.log(`socekt ${socket.id} disconnected`);
+        game.clients.splice(game.clients.indexOf(socket.id), 1)
+        game.io.emit('client_disconnected', socket.id, game.clients);
+    })
 })
-// function servResponse(req, res) {
-//     var allData = "";
-//     req.on("data", function (data) {
-//         //console.log("data: " + data)
-//         allData += data;
-//     })
-//     req.on("end", function (data) {
-//         var finish = qs.parse(allData)
-//         //console.log(finish)
-//         var reply = {
-//             ok: "OK"
-//         }
-//         //res.writeHead(200, { 'Content-Type': 'text/plain;;charset=utf-8' });
-//         res.end(JSON.stringify(reply));
-//     })
-// }
 
-server.listen(3000, function () {
-    console.log("serwer startuje na porcie 3000")
-});
+// automatic routing
+app.use(express.static("."))
+
+
+//nasłuch na określonym porcie
+server.listen(PORT, function () {
+    console.log(`server started on port: ${PORT}`)
+})

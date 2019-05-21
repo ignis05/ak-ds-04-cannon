@@ -41,6 +41,16 @@ game.io.on('connect', socket => {
         game.clients.splice(game.clients.indexOf(socket.id), 1)
         game.io.emit('client_disconnected', socket.id, game.clients);
     })
+
+    // barrel rotation
+    socket.on('rotate_barrel', val => {
+        socket.broadcast.emit('barrel_rotated', socket.id, val); // notify other players
+    })
+
+    // cannon rotation
+    socket.on('rotate_cannon', val => {
+        socket.broadcast.emit('cannon_rotated', socket.id, val); // notify other players
+    })
 })
 
 // automatic routing

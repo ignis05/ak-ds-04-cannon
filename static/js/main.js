@@ -81,6 +81,8 @@ $(document).ready(() => {
         socket.me = clients.indexOf(socket.id)
         console.log(`im player ${socket.me}`);
 
+        if (socket.cannons[socketID].ball) scene.remove(socket.cannons[socketID].ball.mesh)
+        scene.remove(socket.cannons[socketID].group)
         delete socket.cannons[socketID]
 
         // set cannon position
@@ -123,6 +125,17 @@ $(document).ready(() => {
         }
     }
 
+    socket.on('barrel_rotated', (socketID, val) => {
+        if (socket.cannons[socketID]) {
+            socket.cannons[socketID].rotateBarrel(val)
+        }
+    })
+    socket.on('cannon_rotated', (socketID, val) => {
+        if (socket.cannons[socketID]) {
+            socket.cannons[socketID].rotateCannon(val)
+        }
+    })
+
 
     // #endregion socket.io
 
@@ -134,6 +147,7 @@ $(document).ready(() => {
         if (val < 0) val = 0
         if (val > 360) val = 360
         cannon.rotateCannon(val)
+        socket.emit('rotate_cannon', val)
         $('#controls-cannon-rotation-input').val(val)
         cannon.displayAimAssist()
     })
@@ -142,6 +156,7 @@ $(document).ready(() => {
         if (val < 0) val = 0
         if (val > 360) val = 360
         cannon.rotateCannon(90 - val)
+        socket.emit('rotate_cannon', 90 - val)
         $('#controls-cannon-rotation').val(val)
         cannon.displayAimAssist()
     })
@@ -152,6 +167,7 @@ $(document).ready(() => {
         if (val < 0) val = 0
         if (val > 90) val = 90
         cannon.rotateBarrel(90 - val)
+        socket.emit('rotate_barrel', 90 - val)
         $('#controls-barrel-rotation-input').val(val)
         cannon.displayAimAssist()
     })
@@ -160,6 +176,7 @@ $(document).ready(() => {
         if (val < 0) val = 0
         if (val > 90) val = 90
         cannon.rotateBarrel(val)
+        socket.emit('rotate_barrel', val)
         $('#controls-barrel-rotation').val(val)
         cannon.displayAimAssist()
     })
@@ -282,6 +299,7 @@ $(document).ready(() => {
             if (val < 0) val = 0
             if (val > 360) val = 360
             cannon.rotateCannon(val)
+            socket.emit('rotate_cannon', val)
             $('#controls-cannon-rotation-input').val(val)
             $('#controls-cannon-rotation').val(val)
             cannon.displayAimAssist()
@@ -291,6 +309,7 @@ $(document).ready(() => {
             if (val < 0) val = 0
             if (val > 360) val = 360
             cannon.rotateCannon(val)
+            socket.emit('rotate_cannon', val)
             $('#controls-cannon-rotation-input').val(val)
             $('#controls-cannon-rotation').val(val)
             cannon.displayAimAssist()
@@ -300,6 +319,7 @@ $(document).ready(() => {
             if (val < 0) val = 0
             if (val > 90) val = 90
             cannon.rotateBarrel(90 - val)
+            socket.emit('rotate_barrel', 90 - val)
             $('#controls-barrel-rotation-input').val(val)
             $('#controls-barrel-rotation').val(val)
             cannon.displayAimAssist()
@@ -309,6 +329,7 @@ $(document).ready(() => {
             if (val < 0) val = 0
             if (val > 90) val = 90
             cannon.rotateBarrel(90 - val)
+            socket.emit('rotate_barrel', 90 - val)
             $('#controls-barrel-rotation-input').val(val)
             $('#controls-barrel-rotation').val(val)
             cannon.displayAimAssist()

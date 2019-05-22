@@ -5,8 +5,6 @@ class Wall {
         this.height = height
         this.blocksize = blocksize
         this.blocks = []
-
-        this.makeAmericaGreatAgain()
     }
     makeAmericaGreatAgain() {
         for (let block of this.blocks) {
@@ -16,14 +14,31 @@ class Wall {
 
         for (let i = 0; i < this.width; i++) {
             for (let j = 0; j < this.height; j++) {
-                let cube = new Block(this.blocksize, '#ff0000', i, j)
-                this.blocks.push(cube)
-                this.group.add(cube)
+                let block = new Block(this.blocksize, '#ff0000', i, j)
+                block.setPos(this.position)
+                this.blocks.push(block)
+                this.group.parent.add(block)
             }
+        }
+    }
+    moveBlocks() {
+        for (let block of this.blocks) {
+            block.setPos(this.position)
         }
     }
     addTo(parent) {
         parent.add(this.group)
+    }
+    triggerHit(col, row) {
+        let hit = this.blocks.find(block => block.col == col && block.row == row)
+        hit.fly()
+        this.blocks.splice(this.blocks.indexOf(hit), 1)
+
+        for (let block of this.blocks) {
+            if (block.col == col && block.row > row) {
+                block.fall()
+            }
+        }
     }
     get position() {
         return this.group.position

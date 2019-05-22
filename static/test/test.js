@@ -44,7 +44,9 @@ $(document).ready(() => {
 
     let wall = new Wall(5, 4, 50)
     wall.addTo(scene)
+    wall.makeAmericaGreatAgain()
     wall.position.y = 25
+    wall.moveBlocks()
 
     var raycaster = new THREE.Raycaster(); // obiekt symulujący "rzucanie" promieni
     var mouseVector = new THREE.Vector2()
@@ -59,7 +61,9 @@ $(document).ready(() => {
 
         if (intersects.length > 0) {
             let block = intersects[0].object
-            console.log(block);
+            console.log(block.col, block.row);
+
+            wall.triggerHit(block.col, block.row)
         }
     })
 

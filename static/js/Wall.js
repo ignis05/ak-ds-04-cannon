@@ -6,6 +6,7 @@ class Wall {
         this.height = height
         this.blocksize = blocksize
         this.blocks = []
+        this.rotated = false
     }
     makeAmericaGreatAgain() {
         for (let block of this.blocks) {
@@ -24,8 +25,12 @@ class Wall {
     }
     moveBlocks() {
         for (let block of this.blocks) {
-            block.setPos(this.position)
+            block.setPos(this.position, this.rotated)
         }
+    }
+    rotate() {
+        this.rotation.y += Math.PI
+        this.rotated = !this.rotated
     }
     addTo(parent) {
         parent.add(this.group)

@@ -17,8 +17,13 @@ class Block extends THREE.Mesh {
 
         this.add(new THREE.Mesh(this.geometry, this._material))
     }
-    setPos(wallPos) {
-        this.position.set(wallPos.x + (this.col * this.size), wallPos.y + (this.row * this.size), wallPos.z)
+    setPos(wallPos, boolean) {
+        if (!boolean) {
+            this.position.set(wallPos.x + (this.col * this.size), wallPos.y + (this.row * this.size), wallPos.z)
+        }
+        else {
+            this.position.set(wallPos.z, wallPos.y + (this.row * this.size), wallPos.x + (this.col * this.size))
+        }
     }
     fly(dir, vel) {
         var startVel = vel != undefined ? vel : 100

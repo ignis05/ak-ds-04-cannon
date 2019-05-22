@@ -2,6 +2,7 @@ var scene;
 var renderer;
 var π = Math.PI //xd
 var cannon
+var wall
 
 $(document).ready(() => {
 
@@ -50,8 +51,17 @@ $(document).ready(() => {
     cannon.addTo(scene)
     cannon.rotateBarrel(45)
     cannon.load()
+    cannon.power = 150
 
     Cannonball.DESPAWNTIME = 1000;
+
+    wall = new Wall(16, 8, 50)
+    wall.addTo(scene)
+    wall.makeAmericaGreatAgain()
+    wall.position.y = 25
+    wall.position.z = -2000
+    wall.rotate()
+    wall.moveBlocks()
 
     // trigger socket
 
@@ -73,6 +83,15 @@ $(document).ready(() => {
 
         // set cannon position
         socket.updateCannons()
+
+        // reset wall
+        wall = new Wall(16, 8, 50)
+        wall.addTo(scene)
+        wall.makeAmericaGreatAgain()
+        wall.position.y = 25
+        wall.position.z = -2000
+        wall.rotate()
+        wall.moveBlocks()
     })
 
     socket.on('client_disconnected', (socketID, clients) => {
@@ -154,6 +173,7 @@ $(document).ready(() => {
 
     // #endregion socket.io
 
+    // #region listeners
 
     // #region listeneres
     // rotation
@@ -400,6 +420,8 @@ $(document).ready(() => {
     })
     // #endregion keyboard listeners
 
+
+    // #endregion listeners
     function render() {
 
         renderer.render(scene, camera);

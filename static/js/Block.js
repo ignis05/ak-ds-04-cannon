@@ -20,13 +20,28 @@ class Block extends THREE.Mesh {
     setPos(wallPos) {
         this.position.set(wallPos.x + (this.col * this.size), wallPos.y + (this.row * this.size), wallPos.z)
     }
-    fly(direction) {
-        console.log('im flying!');
-        //placeholder
-        this.parent.remove(this)
+    fly(dir, vel) {
+        console.log('flying');
+        var startVel = vel != undefined ? vel : 100
+        var a = 50
+        var startposY = this.position.y
+        var startposX = this.position.x
+        var startposZ = this.position.z
+
+        let t = 0 //time
+        let render = () => {
+            if (this.position.y - 25 > 0) {
+                this.position.y = startposY - (9.81 * t * t / 2)
+            }
+            this.position.x = /* startposX + */ (Math.sin(dir) * startVel * t - (a * t * t / 2))
+            this.position.z = /* startposZ + */ (Math.cos(dir) * startVel * t - (a * t * t / 2))
+            t += Block.TIME
+            console.log(this.position);
+            requestAnimationFrame(render);
+        }
+        render()
     }
     fall() {
-        console.log('im falling');
         var startpos = this.position.y
         this.row = this.row - 1
         let t = 0 //time

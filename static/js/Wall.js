@@ -31,7 +31,7 @@ class Wall {
     }
     triggerHit(col, row) {
         let hit = this.blocks.find(block => block.col == col && block.row == row)
-        hit.fly()
+        hit.fly(0)
         this.blocks.splice(this.blocks.indexOf(hit), 1)
 
         for (let block of this.blocks) {

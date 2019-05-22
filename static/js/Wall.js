@@ -1,6 +1,7 @@
 class Wall {
     constructor(width, height, blocksize) {
         this.group = new THREE.Group
+        // this.group.add(new THREE.AxesHelper(500))
         this.width = width
         this.height = height
         this.blocksize = blocksize
@@ -31,7 +32,7 @@ class Wall {
     }
     triggerHit(col, row) {
         let hit = this.blocks.find(block => block.col == col && block.row == row)
-        hit.fly(0)
+        hit.fly(this.rotation.y)
         this.blocks.splice(this.blocks.indexOf(hit), 1)
 
         for (let block of this.blocks) {

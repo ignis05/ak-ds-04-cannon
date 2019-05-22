@@ -21,22 +21,38 @@ class Block extends THREE.Mesh {
         this.position.set(wallPos.x + (this.col * this.size), wallPos.y + (this.row * this.size), wallPos.z)
     }
     fly(dir, vel) {
-        console.log('flying');
         var startVel = vel != undefined ? vel : 100
-        var a = 50
+        var a = 10 // braking force
         var startposY = this.position.y
         var startposX = this.position.x
         var startposZ = this.position.z
 
-        let t = 0 //time
+        var braking = false
+
+        let t = 0.1 //time
         let render = () => {
-            if (this.position.y - 25 > 0) {
+            if (this.position.y - 25 > 0 && !braking) {
                 this.position.y = startposY - (9.81 * t * t / 2)
+
+                // no braking while in air
+                this.position.x = Math.sin(dir) * startVel * t + startposX
+                this.position.z = Math.cos(dir) * startVel * t + startposZ
             }
-            this.position.x = /* startposX + */ (Math.sin(dir) * startVel * t - (a * t * t / 2))
-            this.position.z = /* startposZ + */ (Math.cos(dir) * startVel * t - (a * t * t / 2))
+            else if (!braking) { // start braking - delayed movement
+                startposX = this.position.x
+                startposZ = this.position.z
+                t = 0.1
+                braking = true
+            }
+            else if (startVel - (a * t) > 0) { // brake
+                this.position.x = Math.sin(dir) * (startVel * t - (a * t * t / 2)) + startposX
+                this.position.z = Math.cos(dir) * (startVel * t - (a * t * t / 2)) + startposZ
+            }
+            else { // remove renderer
+                return
+            }
             t += Block.TIME
-            console.log(this.position);
+            // console.log(this.position);
             requestAnimationFrame(render);
         }
         render()
@@ -44,7 +60,7 @@ class Block extends THREE.Mesh {
     fall() {
         var startpos = this.position.y
         this.row = this.row - 1
-        let t = 0 //time
+        let t = 0.1 //time
         let render = () => {
             if (this.position.y - 25 > this.row * this.size) {
                 this.position.y = startpos - (9.81 * t * t / 2)

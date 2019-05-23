@@ -68,19 +68,25 @@ class Cannonball {
                     requestAnimationFrame(keepFlying)
                 }
                 else {
-                    res(this.position)
                     if (Cannonball.DESPAWNTIME !== false) { // only despawn inf despawntime is set
                         setTimeout(() => {
                             this.mesh.parent.remove(this.mesh)
                             if (!hit) {// if not block hit return camera on despawn
+                                res(this.position)
                                 console.log(cannon.camParams);
                                 cannon.group.add(camera)
                                 camera.position.copy(cannon.camParams.position)
                                 camera.rotation.copy(cannon.camParams.rotation)
                             }
+                            else {
+                                setTimeout(() => {
+                                    res(this.position)
+                                }, 1000)
+                            }
                         }, Cannonball.DESPAWNTIME)
                     }
                     else { // if dispawn is disabled
+                        res(this.position)
                         Cannonball.SPAWNED_CANNONBALLS.push(this)
                     }
                 }

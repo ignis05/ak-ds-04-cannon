@@ -12,6 +12,7 @@ class Cannon {
         var barrelGeometry = new THREE.CylinderGeometry(25, 25, 150, 8, 8);
         var barrelMaterial = new THREE.MeshBasicMaterial({ color: 0x4286f4 });
         this.barrel = new THREE.Mesh(barrelGeometry, barrelMaterial);
+        this.barrel.name = 'barrel'
         this.group.add(this.barrel)
 
 

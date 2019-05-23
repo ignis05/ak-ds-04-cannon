@@ -7,6 +7,7 @@ class Wall {
         this.blocksize = blocksize
         this.blocks = []
         this.rotated = false
+        this.rotation = 0
     }
     makeAmericaGreatAgain() {
         for (let block of this.blocks) {
@@ -29,15 +30,18 @@ class Wall {
         }
     }
     rotate() {
-        this.rotation.y += Math.PI
+        this.rotation -= Math.PI / 2
         this.rotated = !this.rotated
     }
     addTo(parent) {
         parent.add(this.group)
     }
-    triggerHit(col, row) {
+    triggerHit(col, row, dir, power) {
+        if (dir == undefined) dir = this.rotation
+        if (power == undefined) power = 100
+
         let hit = this.blocks.find(block => block.col == col && block.row == row)
-        hit.fly(this.rotation.y)
+        hit.fly(dir, power)
         this.blocks.splice(this.blocks.indexOf(hit), 1)
 
         for (let block of this.blocks) {
@@ -48,8 +52,5 @@ class Wall {
     }
     get position() {
         return this.group.position
-    }
-    get rotation() {
-        return this.group.rotation
     }
 }

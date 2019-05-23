@@ -1,5 +1,5 @@
 class Block extends THREE.Mesh {
-    static TIME = 0.1
+    static TIME = 0.5
     constructor(size, color, col, row) {
         var geometry = new THREE.BoxGeometry(size, size, size);
         var material = new THREE.MeshBasicMaterial({ color: color });
@@ -34,7 +34,8 @@ class Block extends THREE.Mesh {
 
         var braking = false
 
-        let t = 0.1 //time
+        let t = 0.1 //time - start
+
         let render = () => {
             if (this.position.y - 25 > 0 && !braking) {
                 this.position.y = startposY - (9.81 * t * t / 2)
@@ -67,11 +68,16 @@ class Block extends THREE.Mesh {
         this.row = this.row - 1
         let t = 0.1 //time
         let render = () => {
-            if (this.position.y - 25 > this.row * this.size) {
-                this.position.y = startpos - (9.81 * t * t / 2)
-                t += Block.TIME
-                requestAnimationFrame(render);
+            for (let i = 0; i < Block.TIME * 10; i++) {
+                if (this.position.y - 25 > this.row * this.size) {
+                    this.position.y = startpos - (9.81 * t * t / 2)
+                    t += 0.1
+                }
+                else {
+                    return
+                }
             }
+            requestAnimationFrame(render)
         }
         render()
     }

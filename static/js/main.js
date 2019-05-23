@@ -3,6 +3,7 @@ var renderer;
 var π = Math.PI //xd
 var cannon
 var wall
+var socket
 
 $(document).ready(() => {
 
@@ -55,18 +56,19 @@ $(document).ready(() => {
 
     Cannonball.DESPAWNTIME = 1000;
 
-    wall = new Wall(16, 8, 50)
+    wall = new Wall(24, 8, 50)
     wall.addTo(scene)
     wall.makeAmericaGreatAgain()
     wall.position.y = 25
     wall.position.z = -2000
+    wall.position.x = -400
     wall.rotate()
     wall.moveBlocks()
 
     // trigger socket
 
     // #region socket.io
-    var socket = io('/game')
+    socket = io('/game')
     socket.players = []
     socket.cannons = {}
     socket.me = null
@@ -80,16 +82,22 @@ $(document).ready(() => {
         _cannon.addTo(scene)
         _cannon.rotateBarrel(45)
         _cannon.load()
+        _cannon.power = 150
+
 
         // set cannon position
         socket.updateCannons()
 
         // reset wall
-        wall = new Wall(16, 8, 50)
+        for (let block of wall.blocks) {
+            block.parent.remove(block)
+        }
+        wall = new Wall(24, 8, 50)
         wall.addTo(scene)
         wall.makeAmericaGreatAgain()
         wall.position.y = 25
         wall.position.z = -2000
+        wall.position.x = -400
         wall.rotate()
         wall.moveBlocks()
     })
@@ -121,6 +129,7 @@ $(document).ready(() => {
                 _cannon.addTo(scene)
                 _cannon.rotateBarrel(45)
                 _cannon.load()
+                _cannon.power = 150
             }
         }
 
@@ -190,7 +199,7 @@ $(document).ready(() => {
         let val = parseInt($(this).val())
         if (val < 0) val = 0
         if (val > 360) val = 360
-        cannon.rotateCannon(90 - val)
+        cannon.rotateCannon(val)
         socket.emit('rotate_cannon', 90 - val)
         $('#controls-cannon-rotation').val(val)
         cannon.displayAimAssist()
@@ -422,6 +431,10 @@ $(document).ready(() => {
 
 
     // #endregion listeners
+
+
+
+
     function render() {
 
         renderer.render(scene, camera);

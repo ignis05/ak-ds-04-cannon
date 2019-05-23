@@ -2,6 +2,8 @@ class Cannonball {
     static DESPAWNTIME = false
     static TIME = 0.5
     static SPAWNED_CANNONBALLS = []
+    static WALLCORD = { cord: 'x', val: -2000 }
+    static HIT_ONLY_ONE = true
     constructor() {
         var geometry = new THREE.SphereGeometry(22, 8, 8);
         var material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
@@ -32,6 +34,8 @@ class Cannonball {
             this.flying = 0.01
             console.log(this);
 
+            var canhit = true
+
             this.startPos = this.position.clone()
 
             var keepFlying = () => {
@@ -40,6 +44,22 @@ class Cannonball {
                     this.position.y = this.startPos.y + this.velocity * this.flying * Math.sin(this.angle) - ((this.gravity * this.flying * this.flying) / 2)
                     this.position.z = this.startPos.z + this.velocity * this.flying * Math.cos(this.angle) * Math.cos(this.direction)
                     this.flying += Cannonball.TIME
+
+                    if (wall && canhit) { //exists
+                        if (Math.abs(Math.abs(this.position[Cannonball.WALLCORD.cord]) - Math.abs(Cannonball.WALLCORD.val)) < 50) {
+                            // console.log('passing wall at pos: ', wall.position);
+                            // console.log(this.position);
+                            for (let block of wall.blocks) {
+                                if (block.position.distanceTo(this.position) < 50) {
+                                    wall.triggerHit(block.col, block.row, this.rotation.y, this.velocity)
+                                    //socket.emit
+                                    if (Cannonball.HIT_ONLY_ONE) canhit = false // only trigger one hit
+                                    break
+                                }
+                            }
+                        }
+                    }
+
                     if (this.position.y <= 22) {
                         this.flying = false
                     }

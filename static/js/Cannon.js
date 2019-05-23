@@ -46,6 +46,10 @@ class Cannon {
 
         this.aimAssistEnabled = false
         this.aimAssist = null
+
+        this.followWithCamera = false
+
+        this.camParams = {}
     }
     addTo(parent) {
         parent.add(this.group)
@@ -69,15 +73,28 @@ class Cannon {
     }
     fire() {
         if (this.ball) {
+            if (this.followWithCamera) {
+                this.camParams = {
+                    position: camera.position.clone(),
+                    rotation: camera.rotation.clone(),
+                }
+
+                this.ball.mesh.add(camera)
+                camera.position.set(0, 200, 1600)
+                camera.lookAt(this.ball.position)
+
+                console.log(this.camParams);
+            }
+
             this.ball.fly(π / 2 - this.barrel.rotation.z, this.group.rotation.y - π / 2, this.power, this.cannonball_weight).then(() => {
-                if (this.autoreload) this.load()
+                if (this.autoreload) this.load(this.followWithCamera)
             })
             this.ball = false
         }
     }
-    load() {
+    load(follow) {
         if (!this.ball) {
-            var ball = new Cannonball()
+            var ball = new Cannonball(follow)
             this.ball = ball
             ball.addTo(this.group.parent)
             this.setBallPosition()
@@ -97,7 +114,7 @@ class Cannon {
             let y = this.position.y + r * Math.cos(zenit)
             this.ball.position.set(x, y, z)
 
-            this.ball.rotation.y = this.rotation.y - π / 2
+            this.ball.rotation.y = this.rotation.y
         }
     }
     aim() { // calcualtes where shot will land with current parameters

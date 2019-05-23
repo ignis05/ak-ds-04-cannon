@@ -36,12 +36,13 @@ class Wall {
     addTo(parent) {
         parent.add(this.group)
     }
-    triggerHit(col, row, dir, power) {
+    triggerHit(col, row, dir, power, followCam) {
+        console.log(followCam);
         if (dir == undefined) dir = this.rotation
         if (power == undefined) power = 100
 
         let hit = this.blocks.find(block => block.col == col && block.row == row)
-        hit.fly(dir, power)
+        hit.fly(dir, power, followCam)
         this.blocks.splice(this.blocks.indexOf(hit), 1)
 
         for (let block of this.blocks) {

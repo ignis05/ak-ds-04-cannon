@@ -4,6 +4,8 @@ var π = Math.PI //xd
 var cannon
 var wall
 var socket
+var camera
+var cameraState = 'cannon'
 
 $(document).ready(() => {
 
@@ -18,13 +20,13 @@ $(document).ready(() => {
 
     scene = new THREE.Scene();
 
-    var camera = new THREE.PerspectiveCamera(
+    camera = new THREE.PerspectiveCamera(
         45,    // kąt patrzenia kamery (FOV - field of view)
         $(window).width() / $(window).height(),   // proporcje widoku, powinny odpowiadać proporjom naszego ekranu przeglądarki
         0.1,    // minimalna renderowana odległość
         50000    // maxymalna renderowana odległość od kamery 
     );
-    camera.position.set(600, 400, 600)
+    camera.position.set(400, 200, 0)
     camera.lookAt(scene.position)
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -40,19 +42,20 @@ $(document).ready(() => {
     let grid = new Grid(10000)
     grid.addTo(scene)
 
-    var orbitControl = new THREE.OrbitControls(camera, renderer.domElement);
+    /* var orbitControl = new THREE.OrbitControls(camera, renderer.domElement);
     orbitControl.addEventListener('change', function () {
         renderer.render(scene, camera)
-    });
+    }); */
 
-    var axesHelper = new THREE.AxesHelper(5000);
-    scene.add(axesHelper);
+    /* var axesHelper = new THREE.AxesHelper(5000);
+    scene.add(axesHelper); */
 
     cannon = new Cannon(false, false, true)
     cannon.addTo(scene)
     cannon.rotateBarrel(45)
-    cannon.load()
+    cannon.load(true)
     cannon.power = 150
+    cannon.followWithCamera = true
 
     Cannonball.DESPAWNTIME = 1000;
 
@@ -64,6 +67,8 @@ $(document).ready(() => {
     wall.position.x = -400
     wall.rotate()
     wall.moveBlocks()
+
+    camera.lookAt(-2000, 0, 0)
 
     // trigger socket
 
@@ -434,8 +439,11 @@ $(document).ready(() => {
 
 
 
+    cannon.group.add(camera)
+
 
     function render() {
+
 
         renderer.render(scene, camera);
         requestAnimationFrame(render);

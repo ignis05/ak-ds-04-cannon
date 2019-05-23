@@ -4,7 +4,7 @@ class Cannonball {
     static SPAWNED_CANNONBALLS = []
     static WALLCORD = { cord: 'x', val: -2000 }
     static HIT_ONLY_ONE = true
-    constructor() {
+    constructor(follow) {
         var geometry = new THREE.SphereGeometry(22, 8, 8);
         var material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
         var materialWireframe = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true });
@@ -13,6 +13,7 @@ class Cannonball {
         this.mesh.add(new THREE.Mesh(geometry, materialWireframe))
 
         this.flying = false
+        this.followCam = follow
 
         // this.mesh.add(new THREE.AxesHelper(100))
     }
@@ -35,6 +36,7 @@ class Cannonball {
             console.log(this);
 
             var canhit = true
+            var hit = false
 
             this.startPos = this.position.clone()
 
@@ -51,8 +53,8 @@ class Cannonball {
                             // console.log(this.position);
                             for (let block of wall.blocks) {
                                 if (block.position.distanceTo(this.position) < 50) {
-                                    wall.triggerHit(block.col, block.row, this.rotation.y, this.velocity)
-                                    //socket.emit
+                                    wall.triggerHit(block.col, block.row, this.rotation.y - Math.PI / 2, this.velocity, this.followCam)
+                                    hit = true
                                     if (Cannonball.HIT_ONLY_ONE) canhit = false // only trigger one hit
                                     break
                                 }
@@ -70,6 +72,12 @@ class Cannonball {
                     if (Cannonball.DESPAWNTIME !== false) { // only despawn inf despawntime is set
                         setTimeout(() => {
                             this.mesh.parent.remove(this.mesh)
+                            if (!hit) {// if not block hit return camera on despawn
+                                console.log(cannon.camParams);
+                                cannon.group.add(camera)
+                                camera.position.copy(cannon.camParams.position)
+                                camera.rotation.copy(cannon.camParams.rotation)
+                            }
                         }, Cannonball.DESPAWNTIME)
                     }
                     else { // if dispawn is disabled
